@@ -1,0 +1,707 @@
+<!doctype html public "-//w3c//dtd html 4.0 transitional//en">
+<html>
+<head>
+   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+   <meta name="GENERATOR" content="Mozilla/4.76 [en] (X11; U; Linux 2.4.3-12.1 i686) [Netscape]">
+   <title>midas</title>
+</head>
+<body bgcolor="#FFFFEE">
+
+<center>
+<h1>
+Everything you always wanted to know about MIDAS</h1></center>
+
+<center>
+<h4>
+and that it would take you weeks to find in the manual</h4></center>
+
+<center><i>O.Hainaut, 2001-10-22</i>
+<br><i>(<a href="mailto:ohainaut@eso.org?Midas">ohainaut@eso.org</a>)</i>
+<br>URL: <a href="http://www.sc.eso.org/~ohainaut/midas.html">http://sc6.sc.eso.org/~ohainaut/midas.html</a></center>
+
+<p><br>
+<br>
+<br>
+<br>
+<br>
+<p>This is a starter's guide for Midas. Section 1 is for basic interactive
+Midas, Section 2 for programming in Midas.
+<h1>
+0- Generalities</h1>
+
+<p>The official MIDAS page is at <a
+href="http://www.eso.org/projects/esomidas/">http://www.eso.org/projects/esomidas</a>;
+you will find there a link to the full documentation. You may also
+find some useful hints and tips in the <a href="http://www.eso.org/projects/esomidas/midas-faq.html">FAQ</a>.
+
+<p>OK, now you can get started:
+
+<br>inmidas 00 : start midas, session number 00 (should be between 00 and 99)
+<br>inmidas -p 01 : start another midas without killing the 1st one ("parallel")
+<br>inmidas xx : start Midas without graphical capabilities.
+<p>helpmidas : help interface (sometime does not work in LinuX)
+
+
+
+<h1>
+1- Basic Midas:</h1>
+
+<h2>
+1.1- Unix commands in Midas:</h2>
+OK, this is not strictly speaking Midas, but really useful:
+<p>Use $ to pass the command to UniX
+<blockquote><tt>$ ls</tt>
+<br><tt>$ more toto.dat</tt></blockquote>
+
+<p><br>Warning: $ cd will not work as expected ($ starts a shell, in which
+the directory is changed, then you exit from the shell and end up in the
+original directory!). Use
+<blockquote><tt>CHANGE/DIR ../toto</tt>
+<p>(warning for those using my login.prg: cd has been aliased to chan/dir,
+which is why it works as one though it should, but as it should not if
+it had not been redifined).</blockquote>
+
+<h2>
+1.2- Command conventions</h2>
+
+<ul>
+<li>
+commands are not case sensitive:</li>
+
+<ul><tt>LOAD/IMAGE = load/image</tt></ul>
+
+<li>
+commands and parameters can be abreviated as much as possible:</li>
+
+<ul><tt>LOAD/IMAGE toto.bdf scale=full cuts=force,ihap</tt></ul>
+is the same as
+<ul><tt>loa toto sc=fu cu=f,i</tt></ul>
+
+<li>
+all commands have a mini-help:</li>
+
+<ul><tt>LOAD/IMAGE ??</tt></ul>
+
+<li>
+all commands have a long help:</li>
+
+<ul>HELP LOAD/IMA</ul>
+You can also use
+<ul>HELP</ul>
+to get a list of commands, or
+<ul>HELP LOAD</ul>
+to get a list and short help of all the LOAD/* commands, or
+<ul>HELP/QUALI IMAGE</ul>
+to get a list of all the */IMA commands.
+<p>In the generic HELP, you will see that there are several&nbsp; topics
+between [brakets]; these are general help about these topics. I recomment
+specially HELP [DESCRIPTORS]</ul>
+
+<ul>
+<li>
+In a command, parameters can be replaced by a default value using ?</li>
+
+<ul>STAT/IMA ? cursor</ul>
+the 1st parameter is left as default</ul>
+
+<h2>
+1.3- Read images in</h2>
+Images usually come in FITS (toto.fits or toto.mt); midas _can_ deal with
+FITS frames, but it is usually a good idea to translate the FITS into midas'
+internal format, BDF:
+<blockquote><tt>INDISK toto.fits toto.bdf</tt></blockquote>
+(note that FITS is universally standard, but BDF changes from machine to
+machine, from midas version to midas version: NEVER archive BDF files).
+<p>As we are playing with images:
+<blockquote><tt>OUTDISK toto.bdf toto.fits</tt></blockquote>
+will convert an image from BDF to FITS.
+<p>Note that these commands also work on tables stored in FITS:
+<blockquote><tt>INDISK toto.fits toto.tbl</tt>
+<br><tt>OUTDISK toto.tbl toto.fits</tt></blockquote>
+
+<h2>
+1.4- play with images</h2>
+Once you have an image you can look at it:
+<blockquote>
+<li>
+<tt>CREATE/DISPLAY</tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; creates a display
+window to look at images</li>
+</blockquote>
+
+<blockquote>
+<li>
+<tt>LOAD/IMAGE toto.bdf</tt></li>
+
+<br>or with additional parameters:
+<br><tt>LOAD/IMAGE toto.bdf cuts=100,1000 scale=-3 center=500,500</tt>
+<blockquote>cuts: min and max of the color scale
+<br>scale: positive to zoom in, negative to zoom out
+<br>center: the pixel of the image set at the center of the display.</blockquote>
+These come with more fancy options:
+<br><tt>LOAD/IMA toto cu=f,i sc=fu ce=ce</tt>
+<blockquote>cu=f,i: forces the minimum just below the mean of the image,
+the max
+<br>well above the mean. Works well on images
+<br>sc=fu: adjust the scale to see the whole image
+<br>ce=ce: center the center of the image</blockquote>
+</blockquote>
+Note that once the parameters are set, they are remembered for the considered
+image; next time, it is enough to do LOAD/IMA toto to reload it as the
+last time.
+<ul>
+<li>
+GET/CURSOR</li>
+
+<br>will give you a cursor to measure X,Y and level of a pixel in an image.
+Click Mouse-left to measure, Mouse-middle to exit.</ul>
+
+<blockquote>Note that the XY coordinates are given in 2 coordinate systems:
+<ul>
+<li>
+"pixel coordinates": first pixel is 1,1, and they increase by 1 per pixel</li>
+
+<li>
+"world coordinates": a more complex coordinate system. Two cases are possible:</li>
+
+<ul>
+<li>
+simple image: x_world = (x_pixel -1) * x_STEP + x_START (and same for y),
+where STEP adn START are descriptors of&nbsp; the image. For example, on
+SuSI and EMMI (and many La Silla instruments), START is the first pixel
+of the window of the CCD,&nbsp; and STEP is the binning of the CCD. In
+that case, x,y_pixel are the number of the pixel of the image you work
+on, and x,y_world correspond to the "real" pixel of the physical CCD, no
+matter which window and bin are set.</li>
+
+<br>&nbsp;
+<p>&nbsp;
+<br>&nbsp;
+<br>&nbsp;
+<p>As a consequence, if bin=1 and the whole CCD is read out, world=pixel</ul>
+
+<ul>
+<li>
+World Coordinate System (WCS), e.g. for SofI and many instruments on the
+VLT: a more complex rule is set to convert the x,y_pixel into x,y_world
+so that x,y_world are the actual RA, Dec of the pixel.</li>
+</ul>
+</ul>
+
+<p><br>As a convention in Midas, "world" x,y are typed as simple numbers,
+e.g. 123,456, while "pixel" x,y are typed with the @ symbol, e.g. @123,@456.
+So, in the LOAD/IMA example above, we centered the image on world coordinates
+500,500, which may or may not be the same as @500,@500.
+<p>While the pixel coordinates of a pixel can change if you do something
+to an image (e.g. crop it), its world coordinates will always be preserved
+whatever you do (unless of course you mess around with the START and STEP).</blockquote>
+
+<ul>
+<li>
+STATISTICS/IMAGE</li>
+
+<br>will make a statistics of the pixel level of the whole image that is
+displayed. Very useful: the mean, the standard deviation, the median...
+<br>Click Mouse-left to measure, Mouse-middle to exit.</ul>
+
+<ul>STAT/IMA toto.bdf
+<br>you can specify another image (not necessarilly displayed)
+<p>STAT/IMA ? cursor
+<br>you can specify that you want the statistics of only a sub-region.
+Measure with Mouse-left, exit with Mouse-middle
+<p>Beware of combining both:
+<br>STAT/IMA toto cursor
+<br>can give rather stupid results as you define the region on the image
+that is displayed, and you measure on toto.bdf, which might be another
+image!\
+<br>&nbsp;
+<li>
+CENTER/GAUSS</li>
+
+<br>this will give you the center and FWHM (in world unit) of the stars
+you click. Click Mouse-left to measure, Mouse-middle to exit.
+<br>In the same familly, you have
+<br>CENTER/IQE (Image Quality Estimator), which fits a 2D gaussian to the
+image and return the axis and position angle (useful for elongated stars),
+and
+<br>CENTER/MOMENT, which computes the barycenter of the object (useful
+for blobs)
+<br>&nbsp;
+<li>
+READ/DESCRIPTOR toto</li>
+
+<br>will read the basic descriptors (i.e. FITS keyword of the frame) of
+the image.</ul>
+
+<blockquote>READ/DES toto *
+<br>will read _all_ the descriptors (there might be many...)
+<p>READ/DES toto ESO.INS.FILT1.NAME
+<br>will read one of the descriptor
+<p>Some useful ones:
+<br>O_TIME contains the date of the image in different formats and the
+exposure time
+<br>O_POS contains the RA and Dec (in degrees, although some telescope
+store this in hours and deg, which is wrong...)
+<br>START the world coordinates of the first pixel (usually the first pixel
+of a subwindow defined to read the CCD).
+<br>STEP the size a pixel in world coordinates (usually the bin of the
+CCD)</blockquote>
+
+<h2>
+1.5 Arithmetics with images</h2>
+
+<blockquote><tt>COMP/IMA toto.bdf = ( image - bias ) / flat / 900.</tt></blockquote>
+will do exactly what it seems it will do: make the difference between image
+and bias, divide the result by flat, and finally divide the result by number
+900.
+<p>Some notes:
+<ul>
+<li>
+there must be a space before and after the =</li>
+
+<li>
+you can mix images and numbers</li>
+
+<li>
+images can have different sizes (the result will have the size of the intersection
+of all the images), but they must have the same STEP.</li>
+
+<li>
+many functions are defined, look into the help.</li>
+</ul>
+
+<h2>
+1.6 Catalogues</h2>
+A catalogue is an ASCII file that contains a list of stuff. There are 3
+kinds:
+<ul>
+<li>
+image catalogues: ICAT, containing a list of bdf files (or fits, or bdf.gz
+compressed images)</li>
+
+<li>
+table catalogues: TCAT, containing tables</li>
+
+<li>
+ASCII catalogues: ACAT, containing ascii files (typically other catalogues,
+or whatever...)</li>
+</ul>
+
+<p><br>These are really usefull, as many commands can be executed on a
+whole catalogue. In the example below, I use only ICATs, but it works the
+same for the others:
+<br>&nbsp;
+<ul>
+<li>
+CREATE/ICAT oli toto*bdf</li>
+
+<br>creates a catalogue oli.cat with all the frames that match toto*bdf
+(just like in a Unix ls command)</ul>
+
+<ul>
+<li>
+READ/ICAT oli</li>
+
+<br>reads the catalogue</ul>
+<b>Notes:</b>
+<br>catalogues are just ASCII files. You can edit them with Emacs (or whatever
+editor). It is often simpler to do
+<br>CREA/ICA oli *bdf then to remove the lines you don't need than to make
+a very accurate CREA/ICA oli ONT*21T23*bdf,ONT*22T00*bdf...
+<br>&nbsp;
+<ul>
+<li>
+EXECUTE/CATALOGUE LOAD/IMA oli.cat sc=fu</li>
+
+<br>The command after EXEC/CAT will be executed for all the images contained
+in the catalogue.
+<p>Note that you can NOT create new files with different names: this will
+NOT work as you could think it would.
+<br>EXEC/CAT comp oli_new.cat = oli.cat / 1000.
+<br>To do that, you should use a small procedure, c.f. STOR/FRAM in Section
+2.</ul>
+
+<h2>
+1.7 Tables</h2>
+Tables are really very powerful. The can be created
+<ul>
+<li>
+From a data file:</li>
+
+<br>CREATE/TABLE mytable 5 1000 myfile
+<br>(you may need to use a format file, cf HELP CREA/TAB)
+<li>
+From another Midas command, eg</li>
+
+<br>CENT/GAU ? out_table</ul>
+Some useful commands:
+<blockquote>
+<li>
+READ/TABLE toto&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; reads the whole table</li>
+
+<br>READ/TABLE toto @1 #1 #2 #3&nbsp; reads only line 1, columns Nr 1,
+2 and 3
+<br>READ/TABLE toto :xcent :ycent&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; reads only
+columns named :xcent and :ycent, all the lines.
+<br>&nbsp;
+<li>
+COMP/TAB toto :out&nbsp; = :x + :y&nbsp;&nbsp;&nbsp;&nbsp; arithmetics;
+there are many pre-defined functions, cf HELP COMP/TAB</li>
+
+<br>&nbsp;
+<li>
+SELECT/TABLE toto :xcent .ge. 0.&nbsp;&nbsp;&nbsp; will select the lines
+for which the condition is true</li>
+
+<br>SELECT/TABLE toto all&nbsp;&nbsp;&nbsp;&nbsp; re-select the whole table.
+Note that a COMP/TAB reselects the whole table too
+<br>&nbsp;
+<li>
+SORT/TAB toto :x&nbsp; :y&nbsp;&nbsp;&nbsp; sort&nbsp; the table along
+:x, then :y. Be careful when doing a sort on a SELECTed table, then reading
+out the result. May be better to re-do the SELECT</li>
+</blockquote>
+
+<h2>
+1.999 The end</h2>
+At this point, you should be able to survive in front a Midas terminal,
+and even to convince Midas to do what you want to do on an image. Next
+section is for doing the same thing on many images (cf "Error is human,
+you need a computer program to really screw things up").
+<p>Oh, yes. In case you did not find out, the command to exit is
+<blockquote>QUIT</blockquote>
+or
+<blockquote>BYE</blockquote>
+or
+<blockquote>EXIT</blockquote>
+
+<h1>
+2. Basic Midas procedures</h1>
+
+<h2>
+2.1 Intro</h2>
+It can be *very* useful to make small Midas procedures, even for beginners.
+Basically, just put a few commands in a file, and it is already a procedure.
+Be bold, try it. The only think you risk is to wipe the data from your
+disk, but you would need to do something really stupid for that to happen.
+<p>Midas procedures are expected to have the .prg extension, and they are
+called using @@:
+<blockquote><tt>@@ example 1234 toto.bdf out.fits</tt></blockquote>
+will call example.prg, passing 1234, toto.bdf and out.fits as parameters.
+<p>The procedures are looked for
+<br>- first in the local directory
+<br>- second in the ~/midwork directory
+<p>Note that comments are marked with ! :
+<blockquote><tt>LOAD/IMA toto.bdf&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; !
+everything after a ! is a comment</tt></blockquote>
+
+<h2>
+2.2 Variables</h2>
+
+<h3>
+2.2.1 Global and local</h3>
+
+<ul>
+<li>
+All variables _must_ be declared.</li>
+
+<li>
+All variables are considered as "vectors", with n elements, the first one
+not necessarilly being number 1 (it can be any arbitrary number).</li>
+
+<li>
+Variables can be Integer, Real, Double precision or Characters.</li>
+</ul>
+The definition will look like
+<blockquote>variable/type/first_element/number_of_elements</blockquote>
+
+<p><br>Local variables are known only inside the procedure, while global
+variables (called keywords) are known everywhere.
+<br>Use global variables only when needed, because
+<br>- the total space for global variable is limited (big, but limited)
+<br>- once defined, you have to keep the definition compatible (i.e. if
+you define i as global integer, you cannot redefine it later as real, unless
+you DELETE/KEY i first)
+<ul>
+<li>
+Local variables:</li>
+
+<br><tt>DEFINE/LOCAL olinteg/i/1/5 0,1,2,3,4</tt>
+<br>olinteg will be a local vector of 5 integers, the first one is Nr 1.
+The values are initialized.</ul>
+
+<ul>
+<li>
+Global keywords</li>
+
+<br><tt>WRIT/KEY olireal/r/1/1 0.</tt>
+<br>define and initialize a real, global variable</ul>
+
+<h3>
+2.2.2 Parameters</h3>
+The parameters are special case of variable:
+<ul>
+<li>
+they are called P1, P2, ... P8</li>
+
+<li>
+their values are set from the parameter of the procedure</li>
+
+<li>
+they are defined/initialized with</li>
+
+<ul>DEFI/PAR Px default type "query string"</ul>
+Px: the parameter, e.g. p1,
+<br>default: value to be used if it is not given when
+<br>type: I (image), T (table), N (number, any type), C (character); an
+error will be issued if the type does not match,
+<br>"Query string": something that is displayed on the screen to tell you
+what to enter if the parameter is not defined (note that if you give a
+default, this will never be the case)</ul>
+Examples:
+<blockquote><tt>DEFI/PAR P1 oli.cat C "input catalogue"</tt>
+<br><tt>DEFI/PAR P2 ? N "size" ! note that no default is given</tt>
+<br><tt>DEFI/PAR P3 ? ? "something" ! type is free</tt></blockquote>
+
+<h3>
+2.2.3 Variable substitution</h3>
+(tricky and important. In case you were wondering about a coffee, it is
+a good time to have it NOW)
+<p>In a procedure, you can use a variable either DIRECTLY, as in
+<blockquote><tt>COMP/KEY result = toto1 + toto2</tt></blockquote>
+in that case, the variable is used with its full precision, or use its
+SUBSTITUTED VALUE, putting it between {}, as in
+<blockquote><tt>COMP/KEY result = {toto1} + {toto2}</tt></blockquote>
+In that later case, the {toto1} is first substituted using the current
+format, and THAT value is used.
+<p>As a general rule:
+<ul>
+<li>
+if you compute something, as in COMP/KEY, use the variables directly:</li>
+
+<ul>COMP/KEY result = toto1 + toto2</ul>
+
+<li>
+if you use a variable in a non-computing command, use its substituted value:</li>
+
+<ul>LOAD/IMA toto.bdf cuts={toto1},{toto2}</ul>
+</ul>
+Example: toto.prg
+<blockquote><tt>DEFI/LOC toto1/r/1/1 1.001</tt>
+<br><tt>DEFI/LOC toto2/r/1/1 2.002</tt>
+<br><tt>DEFI/LOC result/r/1/1 0</tt>
+<br><tt>result = toto1 + toto2 -3 ! note that COMP/KEY is implicit</tt>
+<br><tt>READ/KEY result</tt>
+<p><tt>SET/FORM f5.2</tt>
+<br><tt>result = {toto1} + {toto2} -3</tt>
+<br><tt>READ/KEY result</tt></blockquote>
+
+<blockquote>Midas 011: @@ toto</blockquote>
+
+<blockquote><tt>keyword: RESULT type: real no_elems: 1 modtime: 1003791723</tt>
+<br><tt>0.00300014</tt>
+<br><tt>keyword: RESULT type: real no_elems: 1 modtime: 1003791723</tt>
+<br><tt>0</tt></blockquote>
+
+<blockquote>The first COMP/KEY was executed in full precision, the second
+in the precision of the format!</blockquote>
+
+<p><br>(note that {toto} used to be written 'toto' - you might still find
+it in old programs; it is obsolete, as you cannot nest them, as in {toto{i}}
+)
+<p>The format is defined as in FORTRAN, with the following syntax:
+<blockquote><tt>SET/FORM </tt>Format_for_integer format_for_real,format_for_double_precision</blockquote>
+(note the , ), e.g.
+<blockquote><tt>SET/FORM I5 F5.2,E15.5</tt></blockquote>
+
+<h2>
+2.2.4 Special functions:</h2>
+Many functions exist in Midas. Their name is always M$SOMETHING, where
+SOMETHING is what you would expect, eg
+<p><tt>M$ABS(arg) M$LN, M$LOG10, M$EXP, M$SIN, M$COS, M$TAN(arg), M$SQRT,
+M$ASIN, M$ACOS and M$ATAN(arg)</tt>
+<p>Some special functions are also defined, e.g. M$EXIST(arg) returns 1/0,
+if file contained in character key `arg'&nbsp; exists or not. There are
+many M$EXIST* functions, most of then useful. Refer to HELP COMP/KEY for
+complete description
+<p>NOTE that many of the math functions (e.g. M$LOG) also have a counter-part
+for images,
+<blockquote><tt>COMP/IMA res = log(ima)</tt></blockquote>
+or for tables,
+<blockquote><tt>COMP/TAB table :res = log(:input)</tt></blockquote>
+In those cases, there is no M$, which is only for keywords (what do you
+mean, "confusing"? M$ is only for keywords, not for tables nor images.
+Simple).
+<h2>
+2.3 Structures</h2>
+
+<h3>
+2.3.1 IF</h3>
+<b>General structure:</b>
+<blockquote>IF something .condition. something THEN
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; write/out "it is true"
+<br>ELSE
+<br>&nbsp;&nbsp;&nbsp;&nbsp; write/out "it is false"
+<br>ENDIF</blockquote>
+.condition. is like in FORTRAN: .le. .lt. .eq. .ge. .gt. .ne.
+<p>ELSE can be ommitted.
+<p><b>Example</b>:
+<blockquote>if <tt>clei .eq. 4 then</tt>
+<br><tt>&nbsp;&nbsp; write/out "Loading result..."</tt>
+<br><tt>&nbsp;&nbsp; load/ima 'p1'</tt>
+<br><tt>&nbsp;&nbsp; clea/ch ov</tt>
+<br><tt>&nbsp;&nbsp; clei = 0</tt>
+<br><tt>else</tt>
+<br><tt>&nbsp;&nbsp; write/out "not loading yet"</tt>
+<br><tt>endif</tt></blockquote>
+Same remark than above about substituted and direct use of the variables;
+the condition above could be written
+<blockquote>IF {clei} .EQ. 4 THEN</blockquote>
+or even
+<blockquote>IF "{clei}" .EQ. "0004" THEN</blockquote>
+assuming format set to I4).
+<h3>
+2.3.2 DO</h3>
+<b>General structure:</b>
+<blockquote>DO variable = start end step
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; write/out {variable}
+<br>ENDDO</blockquote>
+Note that
+<br>- the start end step are separated by spaces,
+<br>- step can be ommitted, and is set to 1 by default.
+<br>- step=0 is OK and corresponds to an infinite loop
+<br>- the loop is always execute at least once!
+<p>Example:
+<blockquote><tt>DO LL = 22 OUTPUTI(4) -2</tt>
+<br><tt>&nbsp;&nbsp;&nbsp;&nbsp; WRITE/OUT {LL}</tt>
+<br><tt>ENDDO</tt></blockquote>
+
+<p><br>(do I still need to make a remark about substituted variables?)
+<h3>
+2.3.3 GOTO</h3>
+
+<p><br>Goto is quite useful (I don't want to hear comments about GOTOs
+being unelegant, outdated, etc... the ARE useful). The command is
+<blockquote><tt>GOTO LABEL</tt></blockquote>
+Where LABEL is a label located somewhere else, marked with :, as in:
+<br>&nbsp;
+<blockquote><tt>again:</tt>
+<br><tt>! ( note the : after again: this is a label )</tt>
+<br><tt>... ! some other stuff</tt>
+<p><tt>if i .ge. 0 then</tt>
+<br><tt>&nbsp;&nbsp;&nbsp; goto again:</tt>
+<br><tt>endif</tt></blockquote>
+which simulate a DO-WHILE loop.
+<h3>
+2.3.4 Catalogue loops</h3>
+If you want to loop on all the frames contained in a catalogue,
+<br>STORE/FRAME is what you need. From the help:
+<blockquote>&nbsp;
+<br><tt>STORE/FRAME key frame [indx] [exit_label]</tt>
+<br>key = name of keyword where frame or catalog entry will be stored in
+<br>frame = name of frame (syntax = nnnnn) (a)
+<br>or
+<br>name of catalog (syntax = nnnnn.cat) (b)
+<br>indx = index into local keyword CATAL, only used with option (b);
+<br>defaulted to 1, i.e. use CATAL(1)
+<br>exit_label = label to jump to on termination of catalog processing,
+<br>only used with option (b)</blockquote>
+<b>Example and notes:</b>
+<blockquote><tt>DEFINE/LOCAL CATAL/I/1/1 0 ! you NEED it, and it MUST be
+called CATAL</tt>
+<br><tt>CAT_LOOP: ! label for the beginning of the loop</tt>
+<br><tt>STORE/FRAME IN_A astro.cat 1 FINITO</tt>
+<br><tt>.... commands using frames stored in key IN_A, eg</tt>
+<br><tt>COMP/IMA new_{IN_A} = ({IN_A} - bias)/ff</tt>
+<br><tt>LOAD/IMA new_{IN_A} cu=f,i sc=fu</tt>
+<br><tt>GOTO CAT_LOOP ! loop the loop</tt>
+<p><tt>FINITO: ! jump here when the catalogue is finished</tt>
+<br><tt>.... any other commands ....</tt></blockquote>
+<b>Notes</b>:
+<br>- if STOR/FRA receives a frame (toto.bdf) instead of a catalogue (with
+.cat), the loop will be executed once for that frame: great to make procedures
+that work both on catalogues and single frames.
+<br>- this is much more powerful that the EXEC/CAT: you can create new
+frames and play with their names, as in the example.
+<br>&nbsp;
+<h2>
+2.4 Deal with tables and images</h2>
+
+<h3>
+2.4.1 Simple stuff</h3>
+
+<blockquote><tt>COMP/IMA mag_{inima} = -2.5* log10( ({inima} - {bias})/{ff}
+) + {ZP}</tt></blockquote>
+will be interpretted as
+<blockquote><tt>COMP/IMA mag_ntt0012 = -2.5*log10((ntt0012 -bias_night1)/ff_night1)+26.42</tt></blockquote>
+(note the combination of images and numbers).
+<br>&nbsp;
+<h3>
+2.4.2 Play with descriptors</h3>
+To read a descriptor into a variable, you can use COPY/DK (cf the help),
+but it is faster and nicer to address directly the header. Let's assume
+you want to read in the exposure time of a frame, which is stored in O_TIME(7)
+<blockquote><tt>DEFI/LOC exp/r/1/1 0.</tt>
+<br><tt>exp = {ima.bdf,O_TIME(7)}</tt></blockquote>
+et voila. If the name of the image is in a variable (for instance the parameter
+P1), just nest the {}:
+<blockquote><tt>exp = {{p1},O_TIME(7)}</tt></blockquote>
+Note that this is a case of variable substitution. Beware of the format.
+<p>In the case of tables, it is the same trick, but you <b>have</b> to
+specify the .tbl extension.
+<blockquote><tt>table_length = {{p1}.tbl,TBLCONTR(10)}&nbsp; ! remark:
+in this example, P1 is expected to come without the .tbl, so we add it.</tt></blockquote>
+Note that TBLCONTR(10) is the length of the table
+<h3>
+2.4.3 Play with tables</h3>
+If you want to address just an element of a table:
+<blockquote><tt>x = {table.tbl,:x,@1}</tt></blockquote>
+of more fancy:
+<blockquote><tt>x = {{myTable},:{myColumn},@{i}}</tt></blockquote>
+
+<p><br>If you want to write in one element:
+<blockquote><tt>{myTable},:mjd,@{i} = JD - 250000.5</tt></blockquote>
+(note that the left side is NOT surrounded by {}! Go and re-read the section
+on variable substitution if it is not clear!)
+<h3>
+2.4.999 Various tricks</h3>
+Many commands output their values in the generic global keywords OUTPUTR,
+OUTPUTI, OUTPUTC. READ/KEY these keywords just after executing the command
+to see who is who. For instance
+<blockquote><tt>stat/ima {p1}</tt>
+<br><tt>min = outputr(1)</tt>
+<br><tt>max = outputr(2)</tt>
+<br><tt>mean = outputr(3)</tt>
+<br><tt>sigma = outputr(4)</tt>
+<br><tt>median = outputr(7)</tt></blockquote>
+In addition to the previous output in OUTPUT*, many commands can output
+their results in table, cf the help of CENT/GAU, MAGN/CIR, etc...
+<p>In the case of tables: any table has two special columns
+<blockquote>SEQ which contains the number of the line (in the current way
+of sorting it!)
+<br>SEL which is set to 1 if the line is selected, 0 if not. So, if you
+want to make an additional selection to something already selected:
+<blockquote>SELEC/TAB toto sel.eq.1 .and. :x.le.0.</blockquote>
+</blockquote>
+
+<h2>
+2.999 Final notes</h2>
+More hints can be found in
+<blockquote><tt>HELP [BATCHES]</tt></blockquote>
+
+<p><br>Also, remember that the fastest way to program is often to modify
+a program that does something vaguely similar to what you want. Look in
+~/midwork for inspiration.
+<br>&nbsp;
+<br>&nbsp;
+<br>
+<center>
+<p>--oOo--
+<br>
+<hr WIDTH="100%">
+<br>[ <a href="http://sc6.sc.eso.org/~ohainaut">O.Hainaut</a> | <a href="mailto:ohainaut@eso.org?Midas">comments</a>
+| <a href="http://www.eso.org">ESO</a> | <a href="http://www.ls.eso.org">La
+Silla</a> | <a href="http://www.ls.eso.org/lasilla/Telescopes/NEWNTT">NTT</a>
+]</center>
+
+</body>
+</html>

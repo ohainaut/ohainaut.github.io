@@ -1,0 +1,320 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><html><head><meta http-equiv="content-type" content="text/html; charset=ISO-8859-1"><title>Signal and Noises</title></head><body>
+
+<div style="text-align: center;">
+<h1>Signal, Noise and Detection</h1>
+<span style="font-style: italic;">O.Hainaut, 2005-Jun-01<br>
+(ohainaut@eso.org)<br>
+<span style="font-style: italic;"><span style="font-style: italic;"><span style="font-style: italic;"></span></span></span></span>URL: http://www.sc.eso.org/~ohainaut/ccd/sn.html<br>
+<span style="font-style: italic;"></span>
+
+
+<p>
+
+
+<div style="text-align: left;">This short document discusses the concept of Signal, Noise, Signal/Noise ratio, and their practical application in astronomy.<br>
+<br>
+<h2>1.- Signal<br>
+</h2>
+The Signal (<span style="font-style: italic;">S</span>) is the number
+of photons detected from a source. In practice, we don't detect all the
+photons that arrive on the detector, only a fraction of them are
+converted to electrons and detected (the ratio electron/photon is the
+quantum efficiency; it is typically 50-85% for a CCD). So, in what
+follows, we will work only in electrons. <br>
+<br>
+The total signal <span style="font-style: italic;">S</span> is related to the number of electrons we get per seconds, <span style="font-style: italic;">s </span>[e-/s] (the [] marks the units and/or dimensions) and the total exposure time, <span style="font-style: italic;">t</span> [s]:<br>
+<div style="text-align: center;">&nbsp;S = s . t&nbsp;&nbsp;&nbsp; [e].<br>
+<div style="text-align: left;"><br>
+In many cases, the total exposure time&nbsp;&nbsp; t&nbsp; is split in various exposures. To keep the "infrared" notation, <br>
+<br>
+<div style="text-align: center;">t = NDIT . DIT<br>
+<div style="text-align: left;"><br>
+where NDIT is the number of exposures and DIT is the individual exposure times. So, <br>
+<br>
+<div style="text-align: center;">S = s . NDIT . DIT<br>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<span style="font-style: italic;"></span>
+<div style="text-align: left;">
+<h2><span style="font-weight: bold;">2.- Noise</span></h2>
+<p>The Noise (<span style="font-style: italic;">N</span>) is the total
+random contribution from various sources that affect the measurement of
+the signal. Also measured in [e]. We will see after that there are
+various sources of noises and that they behave differently. The noise
+is basically the error on the flux measured:<br>
+</p>
+<div style="text-align: center;">S +/- N,<br>
+<div style="text-align: left;">like, 1532 +/- 231 electrons, or 123+/- 14 mJy.<br>
+<br>
+</div>
+</div>
+<h2>3.- Signal-to-Noise Ratio</h2>
+<p>The Signal-to-Noise Ratio, SNR, <span style="font-style: italic;">S/N</span>, measures how well an object is measured. Typical values:<br>
+</p>
+<ul>
+  <li><span style="font-style: italic;">S/N = 2-3</span>: object barely detected</li>
+  <li><span style="font-style: italic;">S/N = </span>5: object detected, one can really start to beleive what one sees</li>
+  <li><span style="font-style: italic;">S/N = </span>10:&nbsp; we can stat to do measurements</li>
+  <li><span style="font-style: italic;">S/N = </span>100: excellent measurment.</li>
+</ul>
+As <span style="font-style: italic;">N</span>&nbsp; is the error on the measurement, <span style="font-style: italic;">1 /&nbsp; (S/N ) </span>is the relative error on the measurement: <br>
+<ul>
+  <li><span style="font-style: italic;">S/N = </span>100:&nbsp; measurement at 1%</li>
+  <li><span style="font-style: italic;">S/N = </span>10: at 10%</li>
+  <li><span style="font-style: italic;">S/N = </span>5 : at 20%&nbsp; (+/- 20%)</li>
+  <li><span style="font-style: italic;">S/N = </span>2:&nbsp; +/- 50% !<br>
+  </li>
+</ul>
+<br>
+<div style="text-align: left;">Important remark about the flux/magnitude conversion: by definition, <br>
+<div style="text-align: center;"><span style="font-style: italic;">Mag = -2.5 </span>log ( <span style="font-style: italic;">S </span>),<br>
+<div style="text-align: left;">(to which one has to add a series of
+magic constants to take into account the conversion of units,
+correction for extinctions, etc... That is another story. As these are <span style="font-style: italic;">constants</span>, they don't affect what follows). As we have an error <span style="font-style: italic;">N</span>
+on the Signal, the error on the magnidude would be obtained from dMag =
+-2.5 log ( S )&nbsp; + 2.5 log ( S + N )&nbsp; =&nbsp; 2.5 log ( (S+N)
+/ S )&nbsp; = 2.5 log ( 1 + N/S).&nbsp; Here comes the "magic":<br>
+<div style="text-align: center;"><div style="text-align: left;"><div style="text-align: center;"><div style="text-align: left;">
+<div style="text-align: center;">
+<div style="text-align: left;">
+<div style="text-align: center;"><br>
+<div style="text-align: left;">
+<ul>
+<li><span style="font-style: italic;">S/N = </span>100:&nbsp; measurement at 1%, error on magnitude = -2.5 log (1.01) = 0.0108 ~= 0.01 mag<br>
+</li><li><span style="font-style: italic;">S/N = </span>10: at 10%, error on mag = -2.5 log (1.1) = 0.103 ~ 0.1 mag<br>
+</li><li><span style="font-style: italic;">S/N = </span>5 : at 20%&nbsp; (+/- 20%); error on mag = -2.5 log (1.2 ) = 0.198 ~ 0.2 mag<br>
+    <span style="font-style: italic;"></span></li>
+</ul>
+<div style="text-align: center;">
+<table cellpadding="2" cellspacing="2" border="1" style="text-align: left; margin-left: auto; margin-right: auto;">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">Error on Mag&nbsp; ~&nbsp;&nbsp;&nbsp; 1/&nbsp; (S/N)<br>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<div style="text-align: left;"><br>
+<br>
+<h2>4.- Noises</h2>
+<p>Various noises are considered:<br>
+</p>
+<h3>4.1. Shot Noise</h3>
+<p>Every time we deal with a source of photons arriving at random, the noise assiciated with that randomness is<br>
+</p>
+<div style="text-align: center;">N = sqrt(&nbsp; n )<br>
+<div style="text-align: left;"><br>
+Where n is the number of photons. As we work in electrons, same thing,
+with n in electrons. This applies to two sources of noises:<br>
+<br>
+<br>
+<span style="font-weight: bold;">Object noise</span>, associated to the number of electrons from the object itself:<br>
+<div style="text-align: center;"><br>
+N_object&nbsp; = sqrt (n_object)<br>
+<div style="text-align: left;"><br>
+By definition of S =&nbsp; s . t, the signal:<br>
+<div style="text-align: center;">N_object = sqrt( S )<br>
+= sqrt ( s . t )<br>
+= sqrt ( s . NDIT . DIT )<br>
+<div style="text-align: left;"><span style="font-weight: bold;"><br>
+<br>
+Sky Noise:</span> This also applies to the sky: when we measure the
+object, we have to measure the sky "under" the object at the same time,
+then take it into account by subtracting it. Bottom line: we have to
+take into account the shot noise of the sky:<br>
+<div style="text-align: center;"><br>
+N_sky = sqrt( Sky )<br>
+<div style="text-align: left;"><br>
+Where sky is the number of electrons coming from the sky in the region
+covered by the object. We define&nbsp;&nbsp; sky&nbsp; as the number of
+electron per second an per pixel, and n_pix&nbsp; the number of pixels
+covered by the object (this is the area un der the object, so related
+to seeing^2 ). With these, we have<br>
+<div style="text-align: center;"><br>
+N_sky =&nbsp; sqrt (&nbsp; n_pix . s . t )<br>
+= sqrt ( n_pix . s . NDIT . DIT )<br>
+<div style="text-align: left;"><br>
+<br>
+<span style="font-weight: bold;">Dark Noise: </span>Finally, the shot
+noise also applies to the Dark Current, i.e. the number of electrons
+that are coming from thermal radiation of the detector itself:<br>
+<div style="text-align: center;">Dk = n_pix . dk . t<br>
+<br>
+<div style="text-align: left;">(where dk&nbsp; is the number of electrons per pixel per hour), so the dark shot noise is:<br>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p style="text-align: center;">N_dk = sqrt( n_pix . dk . t )<br>
+= sqrt ( n_pix . dk . NDIT . DIT )<br>
+</p>
+</div>
+</div>
+</div>
+&nbsp;<br>
+<div style="text-align: left;">
+<h3>4.2. Read-out-noise</h3>
+<p>When reading the detector, the amplifier(s) involved add some noise
+to the signal. This is a characteristic of the chip and of the
+read-out-mode used.&nbsp;&nbsp;&nbsp; Let&nbsp;&nbsp; RON&nbsp;&nbsp;
+be the&nbsp; read-out-noise&nbsp;&nbsp; per read-out&nbsp; (one get the
+noise each time one reads) and per pixel&nbsp; (in electron). The total read out noise is then:<br>
+</p>
+<div style="text-align: center;">N_ron = sqrt( npix&nbsp; . RON^2)<br>
+= sqrt( n_pix) . RON<br>
+<div style="text-align: left;"><br>
+(all the individual read-out-noises add quadratically).&nbsp; If we read the chip NDIT times,<br>
+<br>
+<div style="text-align: center;">N_ron = sqrt ( n_pix . NDIT ) . RON<br>
+</div>
+</div>
+<br>
+<div style="text-align: left;">
+<h3>4.3. Adding noises and total signal to noise ratio<br>
+</h3>
+<p>Random, uncorrelated noises (such those described) add quadratically, so, the generic formula for the noise is<br>
+</p>
+<div style="text-align: center;">
+<table cellpadding="2" cellspacing="2" border="1" style="text-align: left; margin-left: auto; margin-right: auto;">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">N_total = sqrt(&nbsp; N^2&nbsp; + N_sky^2&nbsp; + N_dark^2 + N_ron^2 )</td>
+    </tr>
+  </tbody>
+</table>
+<div style="text-align: left;"><br>
+We can play with the formula, introducing the various definitions, to get the generic formula for the SNR:<br>
+<br>
+</div>
+S/N = S/N_tot = S /&nbsp; sqrt (&nbsp; S&nbsp; +&nbsp; Sky&nbsp; +&nbsp; Dark + N_ron^2 )<br>
+<br>
+<br>
+</div>
+<table cellpadding="2" cellspacing="2" border="1" style="text-align: left; margin-left: auto; margin-right: auto;">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;">S/N =&nbsp; s.t&nbsp; / &nbsp; sqrt ( s.t + n_pix . sky . t + n_pix . dark . t + n_pix . NDIT . RON^2 )</td>
+    </tr>
+  </tbody>
+</table>
+<p><br>
+</p>
+<h2>5. Special cases -- in practice</h2>
+<p>The generic S/N equation is used in details in the Exposure Time
+Calculators. However, in practice, it is useful to consider some
+special cases, to understand the behavior of the instrument, and why
+one can/should make many short or one long exposure.<br>
+</p>
+<h2>5.1.-&nbsp; Bright source</h2>
+<p>Let's first consider the case of a bright star. In that case, the
+signal of the star is so bright that all the other sources of noises
+are negligible:<br>
+we can remove them from the equation:<br>
+</p>
+<div style="text-align: center;">S/N = s.t&nbsp; /&nbsp; sqrt ( s.t )&nbsp; = sqrt( s . t)<br>
+</div>
+More importantly:<br>
+<div style="text-align: center;">S/N&nbsp; ===&nbsp; sqrt ( t )<br>
+<div style="text-align: left;">( === means "varies proprortionally to").<br>
+<br>
+<span style="font-weight: bold;">Application:</span>&nbsp;&nbsp; bright
+standard stars in imaging and in spectro. Note that in this case, the
+problem is usually not to reach a good S/N, but not to saturate the
+detector.<br>
+</div>
+</div>
+<h2>5.2- Sky Noise Dominated case&nbsp; <br>
+</h2>
+<p>After this warm up, let's consider a more useful case:&nbsp; a faint
+star with a bright sky background:&nbsp;&nbsp; sky &gt;&gt; s . The S/N equation becomes:<br>
+</p>
+<div style="text-align: center;">S/N = s.t&nbsp; /&nbsp; sqrt ( n_pix . sky . t)<br>
+<br>
+S/N ===&nbsp; sqrt ( t ) / sqrt (n_pix)<br>
+<div style="text-align: left;"><br>
+First aspect: if n_pix is smaller, S/N is larger. As n_pix === seeing^2,&nbsp; one sees that good seeing is critical<br>
+<br>
+Second aspect:&nbsp; the signal-to-noise increases as the square root of the TOTAL time&nbsp; t = NDIT.DIT.<br>
+This means that the S/N will not be affected if we take&nbsp;&nbsp; 1
+exposure of 3000s or 10 exposures of 300s (as long as each of the
+individual images is sky-noise dominated).&nbsp; In many cases it IS
+advantageous to split the exposure time in many exposures.<br>
+<br>
+Applications:&nbsp; <br>
+<ul>
+  <li>&nbsp;broad band images in the visible&nbsp; (typical
+value:&nbsp; DIT = 300-600s,&nbsp; Sky = 5000adu = 10000 e, RON = 3 e).
+Taking many images improves the flat field of the final image</li>
+  <li>low resolution spectro in the visible (EFOSC, FORS,
+EMMI-RILD...). As soon as the sky reaches a few hundred e, one can
+split. Advantages: get rid of the cosmic rays.</li>
+  <li>Infra red imaging: the sky is so high that it would saturate the
+detector very quickly (few s to few 10s in JHK, few ms in thermal IR).
+There is no other choice than to split the total exp. with many short
+DIT. This is not a problem for the final S/N, since we are sky noise
+dominated</li>
+</ul>
+Counter applications: This is <span style="font-style: italic;">not&nbsp; </span>the
+case in high resolutions spectroscopy, or in narrow band imaging, since
+the sky is then very low. Do not split in short DITs, cf next section.<br>
+<br>
+
+
+<h2>5.3-&nbsp; Read-out-noise dominated case</h2>
+In case the sky --and the dark-- are very small, they do not dominate
+in the general S/N equation. There are even cases where they are very
+small; in that case, the RON dominates:<br>
+<br>
+<div style="text-align: center;">S/N = s.t / sqrt ( n_pix . NDIT . RON^2 )<br>
+<br>
+S/N === 1/sqrt(n_pix)&nbsp; .&nbsp;&nbsp; 1/sqrt(NDIT)<br>
+<br>
+</div>
+
+<div style="text-align: left;">First aspect:&nbsp; 1/sqrt(n_pix): there
+is here a way to cheat. n_pix is the number of pixel read. We can
+decrease this number by binning the detector (i.e. reading only once
+for 2x2=4 pixels).&nbsp;&nbsp; There is a gain of sqrt(2x2) = 2&nbsp;
+in S/N! Of course, there is a price: one loses some of the resolution:
+spacial resolution in case of imaging, beware of keeping at least 2
+(binned) pix across the seeing) or spectral resolution in case of
+spectro, beware of keeping at least 2 (binned) pix across one spectral
+line.<br>
+<br>
+Second: 1/sqrt(NDIT):&nbsp; one should keep the NDIT as small as
+possible, meaning keeping DIT as long as possible. In case of CCDs, the
+real limit becomes the number of cosmic rays. In practice, DIT_max is
+about 45min, but in some cases, it is worth making it even longer (e.g.
+if the observer does not care about cosmic rays).<br>
+<br>
+Application: <br>
+<ul>
+  <li>narrow band imaging (sky = a couple of electrons), typical exposure times can be as long as 1h. <br>
+  </li>
+  <li>Echelle spectro: the sky light is so much dispersed that it does not count anymore. Keep the exp. time as long as possible.<br>
+  </li>
+</ul>
+</div>
+
+<h1>6- Further reading</h1>
+<a href="http://spiff.rit.edu/classes/phys373/lectures/signal/signal_theory.html">Signal - theory</a>;
+<a href="http://spiff.rit.edu/classes/phys373/lectures/signal/signal.html">Signal 1</a>; 
+<a href="http://spiff.rit.edu/classes/phys373/lectures/signal/signal2.html">Signal 2</a>;
+<a href="http://spiff.rit.edu/classes/phys373/lectures/signal/signal_illus.html">Signal, illustration</a>: nice pages which discusse S/N in astronomical - more detailed than this one, by Michael Richmond.
+
+<p>
+<center>---oOo---</center>
+
+</body></html>

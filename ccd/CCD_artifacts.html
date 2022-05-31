@@ -1,0 +1,362 @@
+<HTML>
+<HEAD>
+<TITLE>CCD artifacts</TITLE>
+</HEAD>
+<BODY bgcolor="#FFFFEE"
+      text="000000"
+      link="AA0000"
+      vlink="0000AA">
+
+<a href="CCD_proc.html">
+Previous section: CCD image processing
+</a>
+
+<hr>
+
+
+<!---=====================================================--->
+<h3>3. Artifacts</h3>
+<!---=====================================================--->
+
+<a name="bad_col">
+<!---=====================================================--->
+<h5>3.1 Bad column</h5>
+<!---=====================================================--->
+
+<p>These are just columns of pixels that do not work properly. There
+are several reasons for a column to be bad (ranging from electronic to
+mechanic), some columns are completely dead (dark), some are "hot"
+(bright), some have just a constant added to what they should normally
+show. A good CCD usually does not have more than a couple of
+them. They are quite easy to correct when they are isolated (one
+interpolates the neighboring columns), but nothing can be done when
+several are next to each other.
+
+
+<!--- FIG 6 --->
+<p><center><i> 
+<img src="ccd_badcol.jpg" border="0" alt=" [ bad column] "> <br> 
+Figure 6: A small region from a CCD image showing various bad
+columns.</I></center>
+<!--- FIG 6 --->
+
+<a name="trap">
+<!---=====================================================--->
+<h4>3.2 Traps</h4>
+<!---=====================================================--->
+
+<p>Some pixels are damaged: they cannot transfer the electrons when
+the image is read out. Therefore, all the pixels below such a bad
+pixel will be normal, but all those above it are lost, because their
+electrons are <i>trapped</i> in the bad pixel; this forms a partially
+bad column as illustrated in Fig.7.
+
+<!--- FIG 7 --->
+<p><center><i> 
+<img src="ccd_trap.jpg" border="0" alt=" [ traps ] "> <br> 
+Figure 7: A small fraction from a CCD image showing a trap pixel and
+the corresponding partially bad column.</I></center>
+<!--- FIG 7 --->
+
+<a name="stuff">
+<!---=====================================================--->
+<h4>3.3 Hair, dust...</h4>
+<!---=====================================================--->
+<h5>3.3.1 On the CCD</h5>
+
+<p>Although it should not happen, sometime a foreign body can find its
+way into the CCD housing and end on the detector. These make dark
+marks on the images, that can usually be partially corrected by flat
+fielding the frames.
+
+<!--- FIG 8 --->
+<p><center><i> 
+<img src="ccd_stuff.jpg" border="0" alt=" [ stuff on the ccd] "> <br> 
+Figure 8a: Unidentified foreign object on the surface of a CCD.</I></center>
+<!--- FIG 8 --->
+
+<a name="dust">
+<h5>3.3.2 Dust on the filter</h5>
+
+A dust grain on the filter or on the window of the CCD camera will
+cause a shadow on the detector. The typical doughnut shape is an
+out-of-focus negative image of the telecope main mirror, with the
+central obstruction caused by the secondary mirror. When the images
+are processed using good <a href="CCD_proc.html#flat">flat-fields</a>,
+these rings can completely be corrected.
+
+
+<!--- FIG 8b --->
+<p><center><i> 
+<img src="ccd_dust.jpg" border="0" alt=" [ stuff on the ccd] "> <br> 
+Figure 8b: Rings caused by some dust grains on the filter above the CCD.</I></center>
+<!--- FIG 8b --->
+
+<a name="cosmics">
+<!---=====================================================--->
+<h4>3.4 Cosmic rays</h4>
+<!---=====================================================--->
+
+<p>When a high energy particle hits the CCD, it loses its energy by
+knocking the atoms constituting the chip itself. That liberates many
+electrons that cause a bright spot on the image. These high energy
+particle can either be genuine cosmic rays (exotic particle produced
+by exploding supernovae, black holes, etc.), or just the product of
+the decay of some radioactive atoms present in the lenses just above
+the CCD. Cosmic rays are usually easy to recognize, because they are
+much sharper than stars (the high energy particle hits just a couple
+of pixels). If one is just planning to produce a nice picture for a
+web site, they are very easy to clean out. However, removing them
+without damaging the real objects can be more tricky, but is still
+possible.
+
+<!--- FIG 9 --->
+<p><center><i>
+<img src="ccd_raw_cos1.jpg" Height="250" border="0" alt=" [ Cosmic rays ] ">
+<img src="ccd_raw_cos2.jpg" height="250" border="0" alt=" [ More cosmics ] ">
+<br> 
+Figure 9: A raw CCD image, zoomed in to show the cosmic rays, that
+appear as sharp and bright little objects, while the stars (trailed on
+this image) are have much smoother shapes. On the left panel, there is
+only one real un-elongated object (slightly toward the top-right from
+the center). The right panel shows cosmic rays from the lower left
+corner at  a smaller scale.
+</i></center>
+<!--- FIG 9 --->
+
+
+<p>
+<table border=0>
+ <tr><td valign="top">
+
+        <p>The scale of some CCDs (size measure in arcsecond/pixel,
+	i.e. what is the size of the pixel as projected in the sky)
+	can be fairly large, especially the ones used by amateurs on
+	small telescope. In that case, the image of  a star will cover
+	just a couple of pixels (we say that the images are
+	under-sampled) and will look similar to a cosmic ray
+	(c.f. Fig. 10). In that case, it is very important to take
+	several images of the same field of view in order to remove
+	the cosmic rays by taking a median of all the images: the
+	result shows some light where there is light in most of the
+	images, while a pixel hit by chance by a cosmic during only
+	one of the exposures will remain dark.
+
+     <td WIDTH="350">
+         <!--- FIG 1 --->
+	 <FONT SIZE="2">
+         <i>
+         <img src="ccd_raw_cos3.jpg" border="0" alt=" [ big pixels ] "> <br>
+
+	 Figure 10: The same field as in Fig.5 (with the same cosmic
+	 rays), with larger pixel to illustrate how difficult it can
+	 be to distinguish a cosmic ray from a star when the pixel
+	 size is under-sampling the images.
+	 </i> </font>
+  </tr> 
+</table>
+
+
+<a name="sat">
+<!---=====================================================--->
+<h4>3.5 Saturation trail</h4>
+<!---=====================================================--->
+
+<p>Each pixel can store only a certain amount of electrons (of the
+order of 100,000). If a pixel is illuminated by a bright star and/or
+if the exposure time is long enough, that pixel will fill up, and the
+electrons will start to fill the neighboring pixels: the CCD is
+saturated.  When the image is read, all the extra electrons will be
+spread over the column containing the saturated pixels, making a
+saturation trail, as shown in Fig.11.
+
+<p>As a consequence, any bright and narrow feature on the same column
+as a bright star must be considered with suspicion: it most likely is
+a saturation trail.
+
+<!--- FIG 11 --->
+<p><center><i> 
+<img src="ccd_sat.jpg" border="0" alt=" [ saturated stars ] "> <br>
+Figure 11: Examples of saturation trails. The scale is different in
+each panel.
+</I></center>
+<!--- FIG 11 --->
+
+<a name="diffr">
+<!---=====================================================--->
+<h4>3.6 Diffraction features</h4>
+<!---=====================================================--->
+
+<p>
+<table border=0>
+ <tr><td valign="top">
+
+       <p>As the light behaves like a wave, it is diffracted when it
+       passes near an obstacle, i.e. a ray of light will be bended,
+       the deviation being stronger if the ray passes closer to the
+       obstacle.
+
+       <p>In the case of a telescope, the most important obstacle is
+       the spider, the cross-like support of the secondary
+       mirror. Most telescopes have a 4-legged spider, which produces
+       the typical cross-shaped diffraction pattern visible around the
+       brightest stars. 1-legged spider produces a bar through the
+       star, and some telescopes (like the Keck) have 6-legged spider,
+       so the star images exhibit a 6-legged pattern.
+
+       <p>It is important to note that the diffraction pattern is not
+       necessarily symmetric: a cable around one of the legs of the
+       spider will make the corresponding bar of the pattern much
+       weaker (because the cable diffracts the light in random
+       directions).
+
+       <p>Also, <strong>every star</strong> in the field has a
+       diffraction pattern, not only the brightest.  If one co-adds
+       many exposures in which just a couple of stars display a
+       diffraction pattern, the result will show many more of these
+       features around much fainter stars. Comets and other extended objects
+       objects usually do NOT have diffraction crosses, because their
+       fuzziness smears the diffraction pattern, which then blends in
+       the object itself.
+
+     <td WIDTH="350">
+         <!--- FIG 12 --->
+	 <FONT SIZE="2">
+         <i>        
+         <img src="ccd_diffrac.jpg" border="0" alt=" [ diffraction
+         cross ] "> <br> 
+
+	 Figure 12: Complex diffraction pattern of the CFHT telescope:
+	 the main cross is not symmetric, and additional, fainter legs
+	 are present. The vertical mark is a saturation pattern.
+	 </i>
+	 </font> 
+</tr> </table>
+
+
+       <p>Finally, the spider is the most common cause of the
+       diffraction patterns, but there are other possibilities: the
+       edge of the telescope, the light baffles, the edge of the
+       mirror, etc... almost everything can cause diffraction
+       patterns. They usually look less symmetric than the ones caused
+       by the spider. This can also explain the presence of
+       diffraction pattern in spider-less telescopes.
+
+      <p>In some case, a mirror or field lens that has been carelessly
+      cleaned will cause diffraction-like patterns.
+
+
+<a name="trail">
+<!---=====================================================--->
+<h4>3.7 Trailing</h4> 
+<!---=====================================================--->
+
+To image a moving object like a comet, the telescope is set to
+compensate the motion, so that the comet will appear
+un-trailed. Everything else in the field will be trailed. However, the
+intensity threshold used to display the image can give the impression
+that the brighter stars are less trailed than the fainter ones: the
+elongation becomes negligible compared to the large apparent diameter
+of the brightest star.  The only way to be sure that an object is not
+elongated is to display the image with proper threshold, or to measure
+the elongation of the object using a software tool that takes into
+account every light level. This has to be performed on the original images:
+it cannot be done on a JPEG or a GIF copy, in which most of the
+information is lost.
+
+
+
+<!--- FIG 13 --->
+<p>
+<table border=0>
+ <tr><td valign="top" width="310">
+       <i> <FONT SIZE="2">
+       <img src="ccd_round_2.jpg" border="0" alt=" [ elongated stars ] "
+       height="240"> 
+       <br> Figure 13.a: Some stars from Fig.1. The intensity
+       thresholds are set for the brightest stars, which appear elongated.
+       </font></i>
+
+     <td WIDTH="310"> <i> <FONT SIZE="2">
+       <img src="ccd_round_1.jpg"
+       border="0" alt=" [ less elongated ]" height="240"> <br> Figure
+       13.b: Exactly the same images as X.a, with different
+       thresholds. Fainter stars are now visible and elongated, while
+       the brighter stars appear now circular, or un-trails </FONT>
+       </I>
+
+
+  </tr>
+</table>
+
+<a name="else"><a name="jump">
+<!---=====================================================--->
+<h4>4. What else can go wrong</h4> 
+<!---=====================================================--->
+
+If an image presents a "feature", something completely strange that
+cannot be explained by any of the previous artifacts, it is most
+probably <i>another</i> kind of artifact. Before reporting the
+discovery, one <strong>must</strong> check absolutely everything. It
+took me some time to realize what the image of Fig.14 was. No, it is
+not an alien spacecraft passing in front of a star. The telescope
+jumped of a few arcseconds about 30 second after the beginning of this
+15 min. exposure, then did not move until the end.
+
+
+
+
+<!--- FIG 14--->
+<p><center><i>
+<img src="ccd_jump.jpg" border="0" alt=" [ UFO? ] ">
+<br> 
+Figure 14: Consequence of a jump of the telescope a few seconds after
+the beginning of the exposures.
+</i></center>
+<!--- FIG 14 --->
+
+<!---=====================================================--->
+<!---==   END   ==========================================--->
+<!---=====================================================--->
+<hr>
+<a href="CCD_proc.html">
+Previous section: CCD image processing
+</a>
+
+<hr> <FONT SIZE="2"> 
+
+Note: these images come from actual data I collected at the <a
+href="http://www.eso.org">European Southern Observatory</a> at <a
+href="http://www.ls.eso.org">La Silla</a>, Chile, with the New
+Technology Telescope (3.55m diam.), equipped with the SuSI camera, and
+at the <a href="http://www.ifa.hawaii.edu/mko/">Mauna Kea
+Observatory</a>, Hawaii (at the <a
+href="http://www.ifa.hawaii.edu/88inch/">88 inch (2.2m) UH
+telescope</a> and at the <a
+href="http://www.cfht.hawaii.edu/">Canada-France-Hawaii</a> 3.6m
+telescope), with the U.H Tektronics 2048 and U.H. 8k CCD
+mosaic.</font>
+
+<hr>
+|
+<a href="http://www.ifa.hawaii.edu/~hainaut/Hale_Bopp/hb_ufo.html">
+Hale-Bopp's companions page</a>
+|
+<a href="http://www.ifa.hawaii.edu/~hainaut/Hale_Bopp/hb_ufo_list.html">
+Hale-Bopp's companions table</a>
+| 
+<a href="http://www.ifa.hawaii.edu/images/hale-bopp">IfA Hale-Bopp
+page</a>
+|<br>|
+<a href="http://www.ifa.hawaii.edu/">IfA home page</a>
+|
+<a href="http://sc6.sc.eso.org/~ohainaut">O.H.'s page</a>
+|
+<A href="mailto:ohainaut@eso.org">Comments?</a>
+|
+
+
+<p><a href="http://sc6.sc.eso.org/~ohainaut">Olivier Hainaut</a>
+
+<p> Tue Dec 10 19:09:33 1996
+</BODY>

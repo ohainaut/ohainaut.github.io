@@ -1,0 +1,409 @@
+
+<HTML>
+<HEAD>
+<TITLE> Astronomical Image Retouching</TITLE>
+</HEAD>
+<BODY bgcolor="#FFFFEE"
+      text="000000"
+      link="0000ff"
+      vlink="000077">
+
+
+
+
+<center>
+<h1>Retouching of astronomical data</h1>
+<h2>  for the production of outreach
+  images</h2>
+
+2009-05-20 O.Hainaut
+</center>
+
+
+
+
+
+<h2>0- Introduction</h2>
+
+There are many steps between the data coming out of a camera on a
+professional telescope and the final image that appears in magazines or
+on our web sites.
+
+<p>They can be split into three main sections:
+<ul>
+<li>preliminary: from the telescope to Photoshop. 
+<li>cleaning: remove the artifacts remaining in the image
+<li>final touch: remove large scale effects, balance the colour, publish.
+</ul>
+
+<h2>1- Preliminary steps</h2>
+
+<table width="100%">
+<tr valign=top>
+<td>
+
+<p>
+The "raw" dataset is a series of exposures taken through different
+filters. The filters are needed to rebuild the colour information, as
+the CCD detectors used work in "black and white" for more flexibility
+and more sensitivity. The basic filters are R (red), V ("visual",
+green), B (blue), but many others can be used: UV or IR to expand the
+"colour" range, or filters with a very narrow transmission centered on
+the colour emitted by atoms or molecules found in space. The most
+common one is the red H_alpha, that highlights the Hydrogen gas.
+In each filter, several images are acquired. This is to increase the
+total exposure time (and see fainter features in the sky), but also to
+cover for defects and features that appear in the detector. For
+instance, we often use CCD mosaics, where gaps are present between the
+various CCDs. Taking various images at slightly different positions
+enable us to recover the information lost in the gaps.
+
+<td width=300>
+<center>
+<a href="raw.jpg">
+<img src="raw_tn.jpg" width=300>
+<p>Fig 1: a raw image (click for full scale)
+</a></center>
+
+
+<tr valign=top>
+<td>
+<p>The individual frames must be cleaned from all the instrumental and
+electronic effects that affect them. This is briefly described in
+another <a href="http://www.sc.eso.org/~ohainaut/ccd/">page</a>. 
+
+<p>Then,
+the images taken in a same filter must be registered, aligned and
+co-added.
+ 
+<td>
+<center>
+<a href="coadd_Ha-1.jpg">
+<img src="coadd_Ha-1_tn.jpg" width=300>
+<p>Fig 2: Co-added image (click for full scale)
+</a>
+</center>
+
+
+<tr valign=top>
+<td>
+<p>At this stage, the images are still in FITS, the astronomical format,
+with one FITS file per filter. The FITS file have 16 bits (65536
+levels of grey). In order to continue the processing, the images are
+converted into a Photoshop PSD file, that contains one filter per
+layer. As the final images must be published with only 8 bits per
+colour (256 levels in R, G and B for a jpeg image), we must squeeze the
+full 16 bit dynamic range into only 8 bits. We must also change the
+response curve of the image so to enhance the faint structure. The
+change of response curve must be done before the conversion from 16 to
+8 bits, otherwise some nasty solarisation effects would appear. A
+convenient way to do this is to use the powerful 
+<a href="http://www.spacetelescope.org/projects/fits_liberator/">
+FITS Liberator plug-in
+for Photoshop</a>.
+
+
+
+<p>Now, the different filters can be mapped to their colours in Photoshop,
+and the image can be displayed as a colour image. The result looks
+horrible. The images still contain many artifacts that need to be
+cleaned away.
+
+<td>
+<center><a href="NGC2262_RGB_33.jpg">
+<img src="NGC2262_RGB_33_tn.jpg" width=300>
+<p>Fig 3. Image converted from FITS to Photoshop, adjusting the dynamic
+range, but not cleaned. (click for full scale)
+</a></center>
+
+
+</table>
+
+
+<h2>2- Cleaning</h2>
+
+
+
+<h3>2.1- The artifacts</h3>
+
+While some artifacts are already cleaned at the data reduction stage,
+many make their way up to the PSD file, and must be cleaned manually
+or using Photoshop filters.
+
+Different types of artifacts are found in the images:
+
+<table width="100%">
+<tr>
+<td>
+
+<tr valign=top>
+<td>
+<b>a.- Bad columns and traps: </b>a vertical line that must be cleaned by cloning
+nearby regions.  Careful not to create new, fake stars, or to leave
+"half stars" in their track. 
+
+
+
+<td>
+<center><a href="ccd_badcol.jpg">
+<img src="ccd_badcol.jpg" width=300>
+<p>Bad columns. Most of them are single columns, but it can happen that  a group of columns is bad
+</a>
+</center>
+
+<td>
+<center><a href="ccd_trap.jpg">
+<img src="ccd_trap.jpg" width=300>
+<p>CCD trap: a dead pixel, near the center of the image, kills the top of its column
+</a>
+</center>
+
+<tr valign="top">
+<td colspan=2>
+<b>b.- Stuff on the detector</b>. Although it should not happen, sometimes a
+foreign body (like a hair, or dust) can find its way into the CCD
+housing and ends up on the detector. These must be erased by cloning
+nearby regions.
+<font color="#007700">Clean these out</a>
+
+<td>
+<center><a href="ccd_stuff.jpg">
+<img src="ccd_stuff.jpg" width=300>
+<p>Foreign stuff on the detector.
+</a>
+</center>
+
+<tr valign="top">
+<td>
+
+<b>c.- Cosmic rays:</b> when a high-energy particle hits the CCD, it appears as a
+very sharp bright spot on the image. They can usually be identified
+because they are much sharper than the stars. They must be removed by cloning
+nearby regions.
+
+<td>
+<center><a href="ccd_raw_cos1.jpg">
+<img src="ccd_raw_cos1.jpg" width=300>
+<p>Cosmic rays, that appear as bright dots.
+</a>
+</center>
+
+<td>
+<center><a href="ccd_raw_cos2.jpg">
+<img src="ccd_raw_cos2.jpg" width=300>
+<p>Zoom on cosmic rays. They appear as dots or tiny streaks. They are always very sharp.
+</a>
+</center>
+
+<tr valign="top">
+<td colspan=2>
+<b>d.- Saturation bleed:</b> each pixel in the CCD can store only a certain
+amount of electrons. If a pixel is illuminated by a bright star, that
+pixel will fill up and start to overflow into neighboring pixels. When
+the image is read out from the detector, this causes trails that must
+be removed. Clean out by cloning nearby regions. 
+
+
+<td>
+<center><a href="ccd_sat.jpg">
+<img src="ccd_sat.jpg" width=300>
+<p>Saturation trails. Moderate case on the left, and nastier on the
+  center and right.   
+</a>
+</center>
+
+
+<tr valign="top">
+<td>
+
+<p>When repairing the region right next to the star, it sometimes
+  works best to copy an horizontal strip including the star with the
+  horizontal diffraction spike (see g- below), rotate it by 90deg, and then use
+  this rotated star to patch the original. One must be careful not to
+  hide real stars doing this.
+
+<td>
+<center>
+<img src="ccd_bleed1.jpg" width=300>
+<br>1- An example of saturation bleed correction: the starting point.
+
+<br>
+<img src="ccd_bleed3.jpg" width=300>
+<br>3- Rotate 90deg, and align
+
+<td>
+<center>
+<img src="ccd_bleed2.jpg" width=300>
+<br>2- Select an area including the star together its diffraction spikes
+
+<br><img src="ccd_bleed4.jpg" width=300>
+<br>4- crop and mask the rotated region so it does not hide anything
+important. 
+
+
+
+
+<tr valign="top">
+<td colspan=2>
+<b>e.- Oversaturation dot:</b> in extreme cases of saturation, the center of a
+star can appear black. Clean out by painting over.
+
+
+<td>
+<center><a href="ccd_jump.jpg">
+<img src="ccd_jump.jpg" width=300>
+<p>At the center of a saturated star, it can happen that a black spot appears.
+</a>
+</center>
+
+<tr valign="top">
+<td colspan=2>
+
+<b>f.- Satellite streaks:</b> it can happen that an artificial satellite
+crosses the field of view, leaving a streak. 
+Because the satellite rotates, its brightness varies with time. The
+intensity of the line can therefore vary.
+ These marks are removed by cloning nearby areas.
+
+
+<td>
+<center><a href="ccd_satellite.jpg">
+<img src="ccd_satellite.jpg" width=300>
+<p>The mark of an artificial satellite.
+</a>
+</center>
+
+
+<tr valign="top">
+<td colspan=2>
+<b>g.- Diffraction pattern:</b> the "spider", that is the arms that support the
+secondary mirror of the telescope, causes a diffraction pattern that
+usually appears as a cross around the brightest stars. This pattern is
+part of the image, and must not be cleaned out. Careful, sometimes the
+diffraction pattern can be hidden by the saturation trail. The
+  diffraction patterns are part of the image, 
+<font color="#770000">they should not be removed.</a>
+
+<td>
+<center><a href="ccd_diffrac.jpg">
+<img src="ccd_diffrac.jpg" width=300>
+<p>A diffraction pattern (in this case, a cross at 45deg). Not to be
+  confused with the sharper saturation trail (in this case vertical)
+</a>
+</center>
+
+<tr valign="top">
+<td>
+<b>h. Background steps:</b> Sometimes, the combination of various
+images taken at slightly different positions results in steps in the
+background of the image. This is difficult to correct.
+
+<td colspan=2>
+<center><a href="ccd_steps.jpg">
+<img src="ccd_steps.jpg">
+<p>Background steps caused by the co-addition of various images</a>
+</center>
+
+
+<tr valign="top">
+<td  colspan=2>
+<b>i.- Ghosts:</b> It can happen that the light of a bright star gets
+reflected somewhere in the instrument, and forms secondary, out of
+focus images, that appear as large doughnuts. Sometimes they are left
+in the final image, sometimes not.
+
+
+<td>
+<center><a href="ccd_ghosts.jpg">
+<img src="ccd_ghosts.jpg" width=300>
+<p>Reflection ghosts.</a>
+</center>
+
+
+</table>
+
+<h3>2.2- Before and after</h3>
+
+The different layers of the image must be cleaned
+individually. Looking at the other layers may help determining what
+should have been visible under a defect. Here come some examples of
+"before" and "after". 
+
+<table width=100%>
+<tr>
+
+<td>
+<center><a href="NGC2264_RGB_original_red-channel.jpg">
+<img src="R_original.jpg" width=300>
+</a>
+</center>
+
+<td>
+<center><a href="NGC2264_RGB_cleaned_red-channel.jpg">
+<img src="R_cleaned.jpg" width=300>
+</a>
+</center>
+
+<tr valign="top">
+<td colspan=2>
+<center>A small segment of an image, before and after cleaning. Red
+  layer only. Click
+  the images for full size.
+</center>
+</table>
+
+
+
+<table width=100%>
+<tr>
+
+<td>
+<center><a href="NGC2264_RGB_original.jpg">
+<img src="RGB_original.jpg" width=300>
+</a>
+</center>
+
+<td>
+<center><a href="NGC2264_RGB_cleaned.jpg">
+<img src="RGB_cleaned.jpg" width=300>
+</a>
+</center>
+
+<tr valign="top">
+<td colspan=2>
+<center>A small segment of an image, before and after cleaning,
+  combining all layers. Click
+  the images for full size.
+</center>
+</table>
+
+
+
+
+<h2>3- Final cleaning and colour balance</h2>
+
+After all the image layers are completely cleaned, there is still some
+work to be done. The various layers must be balanced to best reproduce
+the appearance of the object. This step involves a combination of
+scientific (such as the spectrum of the stars, the sensitivity
+of the camera in the various filters) and artistic inputs (the image
+must look good!). Also, a final adjustment of the response curve can
+enhance some details. In some cases, advanced filters can also be
+applied to further enhance some features.
+
+<p>
+The final, stunning image is then ready for publication. 
+
+<center><a href="NGC2264_RGB-29sep2008_clean4_cc.jpg">
+<img src="NGC2264_RGB-29sep2008_clean4_cc_tn.jpg" width=300>
+<p>The final image. Click for full size.
+</a>
+</center>
+
+
+<p>
+<center>
+---oOo---
+</center>
+
+</body>

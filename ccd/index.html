@@ -1,0 +1,277 @@
+<HTML>
+<HEAD>
+<TITLE>Basic CCD image processing</TITLE>
+</HEAD>
+<BODY bgcolor="#FFFFEE"
+      text="000000"
+      link="AA0000"
+      vlink="0000AA">
+
+<center>
+<h1>
+Basic image processing
+</h1>
+
+<i>O.Hainaut, 1996 Dec.</i>
+<br><i>(<a href="mailto:ohainaut@eso.org?CCD">ohainaut@eso.org</a>)</i>
+<br>URL: <a href="http://www.sc.eso.org/~ohainaut/ccd">http://www.sc.eso.org/~ohainaut/ccd</a></center>
+
+
+<p>These are the typical steps through which a CCD image has to go. 
+ 
+
+<a name="raw">
+<p>
+<table border=0>
+ <tr><td valign="top">
+<!---=====================================================--->
+        <h3>1. Raw images</h3>
+<!---=====================================================--->
+
+        <p>A CCD is an electronic detector constituted by many square
+	photosensitive "pixels". When a photon (light particle) hits
+	one of these pixels, the information is stored in the pixel as
+	an electron.  If the object being observed is very faint, the
+	CCD will be exposed for a long time in order to collect enough
+	electron per pixel. Finally, the CCD is read: the number of
+	electrons in the lower left pixel is read and sent to a
+	computer for further analysis and display, then all the
+	electrons from the last line of pixels are shifted by one
+	pixel, and the lower left pixel is measured. That process is
+	repeated until all the pixels from the 1st line are read
+	out. The whole image is then shifted down by one line, and the
+	the new first line is read out. Eventually, all the lines will
+	be shifted down and read out.
+
+
+     <td WIDTH="350">
+         <!--- FIG 1 --->
+	 <FONT SIZE="2">
+         <i><a href="ccd_raw.jpg">
+         <img src="ccd_raw_s.jpg" border="0" alt=" [ Raw CCD image ] "
+         width=350></a><br> 
+
+	 Figure 1: raw CCD image, obtained with a Tektronics 1024;
+         refer to the bottom of the page for the technical
+         details. The number of electrons read from the CCD have been
+         code using a false color blue scale: black corresponds to the
+         minimum count; white to an arbitrary higher value. The image
+         was actually taken through a R filter.  (<a
+         href="ccd_raw.jpg"> larger 72k jpeg</a>) </i> </font>
+</tr> 
+</table>
+
+<p> The corresponding raw image presents all the defects and artifacts
+of the CCD and the telescope. Depending on the CCD, this raw image can
+look quite bad, as illustrated at Fig.1.
+
+<p><B>THIS</b> is the data. For us, astronomers, these raw images are the
+most valuable, purest form of data. If anything goes wrong, or if we
+think we discovered something, we will always come back to the raw
+data and check if it is there, before we started cleaning and
+calibrating the images. However, the raw image still contains all the
+artifacts, that have to be identified and possibly corrected.
+
+<p>In addition to many stars (slightly trailed), one can see a comet
+(don't see it? keep reading), and a whole collection of CCD and
+telescope artifacts that I will discuss now:
+
+
+<!---=====================================================--->
+<h3>2. Basic data reduction</h3>
+<!---=====================================================--->
+<p> These are the most basic steps; every image published should have
+received the following corrections.
+
+
+<a name="bias"><p>
+<table border=0>
+ <tr><td valign="top">
+<!---=====================================================--->
+         <h4>2.1. Bias Subtraction</h4>
+<!---=====================================================--->
+        
+	 <p>The bias is caused by a constant voltage applied to the
+         CCD detector; ideally it should appear as a constant value
+         added to the image. In practice, it looks more like Fig.2.  
+
+     <td WIDTH="350">
+         <!--- FIG 2 --->	
+         <i><a href="ccd_bias.jpg"><FONT SIZE="2">
+         <img src="ccd_bias_s.jpg" border="0" alt=" [ image of a bias
+         ] " width=350></a><br>
+	 Figure 2: typical bias frame for the same CCD.
+	 (<a href="ccd_bias.jpg">large 81k jpeg</a>)</font></i>
+    </tr>
+</table>
+
+
+<a name="dark">
+<!---=====================================================--->
+<h4>2.2 Dark current</h4> 
+<!---=====================================================--->
+
+         <p>Even when left in the most complete darkness, CCDs will
+         accumulate electrons that will eventually be counted a
+         "light" when the image is read. This is a temperature effect:
+         electrons can be kicked out of place by the heat from the CCD
+         itself; this is the <i>dark current</i> In the case of
+         amateur CCDs, this phenomena is very important, and has
+         absolutely to be corrected for. This professional CCD is
+         cooled to -100C (about -200F) to minimize the effect of the
+         dark current: even during very long exposures, the total dark
+         current accumulated remains negligible.
+
+
+<a name="flat"><p>
+<table border=0>
+ <tr><td valign="top">
+<!---=====================================================--->
+        <h4>2.3 Flat Field</h4> 
+<!---=====================================================--->
+
+        <p>All the pixels making the CCD surface are almost similar;
+        however, they present some variations of sensitivity: some of
+        them will convert the light photons more efficiently into
+        electrons than others. Also, the filters and lenses that are
+        between the sky and the CCD can accumulate some dust particle,
+        that will cast a shadow on the CCD. The result of all these
+        effects is that the image of a uniformly illuminated target
+        (like the sky during the day or twilight, or the inside of the
+        dome) will not appear uniform on the CCD. To correct this
+        effect, we take several images of a <i>flat field</i>
+        (uniformly illuminated), average them, and use them to map the
+        sensitivity variations across the CCD (the flat field
+        corresponding to Fig.1 is displayed in Fig.3). The bias- and
+        dark-subtracted images are then divided by the flat-field,
+        leading to the <i>reduced</i> image; the result for one image
+        is shown in Fig.4.
+
+
+    <td WIDTH="350"><!--- FIG 3/4 --->
+        <a href="ccd_flat.jpg">
+	<img src="ccd_flat_s.jpg" border="0" alt=" [ image of a flat
+        field ] " width=350></a>
+	<FONT SIZE="2"><i> Figure 3: Flat field corresponding to Fig.1. The
+        variations from black to white indicate changes of sensitivity
+        of 10% .  (<a href="ccd_flat.jpg">larger 28k jpg</a>)
+
+	<p> <a href="ccd_flatnd.jpg">
+	<img src="ccd_flatnd_s.jpg" border="0" alt=" [ reduced image ]
+	" width=350></a><br>
+
+	Figure 4: Frame of Figure 1 after reduction (compare the
+	flatness of the sky background to that of Fig.1) (<a
+	href="ccd_flatnd.jpg">larger 48k jpg</a>)</i> </font>
+    </tr>
+
+</table>
+<p>
+
+<a name="further">
+<!---=====================================================--->
+<h4>2.4 Further steps</h4>
+<!---=====================================================--->
+
+After these basic steps that everybody (should) perform, there is a
+lot left to be done; the most typical steps are the following:
+<ul>
+<li>remove the cosmic rays (c.f. below)
+<li>remove the cosmetic defects (c.f. below)
+<li>photometric calibration: convert the number of electrons counted
+by the CCD  into magnitudes or fluxes; this is done by measuring well
+known stars and comparing the value of their measurement with those of
+the object we want to study.
+<li>combine several images to reach fainter magnitudes (c.f. below)
+<li>enhance the images to improve their resolution
+(e.g. deconvolution), to reach fainter magnitudes (e.g. wavelet
+filtering); these technique are very dangerous, because they can
+introduce a whole new series of artifact in the images. Image
+enhancement can be very powerful, but it implies that the person
+processing the images really know what he is doing, otherwise the
+result can be completely meaningless (that is another story; if there
+is some interest, I could maybe add a page or two about that in the
+future).
+</ul>
+
+<p>As an example, Figure 5 shows the central region from the
+recombination of several 10min exposures of the field shown in Fig.1
+and 4. In panel a, the images have been shifted to register the stars;
+in Fig.5.b, the same frames have been shifted to compensate for the
+motion of the comet, which is visible in the center as a central
+condensation with a broad fan-shaped tail indicating that the comet is
+active at a distance of 6.7AU from the Sun.
+
+<!--- FIG 5 --->
+<p>
+<table border=0>
+ <tr><td valign="top" width="350">
+       <i> <FONT SIZE="2">
+       <img src="helin_alu_s.jpg" border="0" alt=" [ field around
+       Heli-Alu] " height="300">
+       <br> Figure 5.a: Field around comet Helin-Alu; this image is
+       the combination of 11 images totalling 6600sec exposure.
+       </font></i>
+
+     <td WIDTH="350">
+       <i> <FONT SIZE="2">
+       <img src="helin_alu_c.jpg" border="0" alt=" [ Comet Heli-Alu]"
+       height="300">
+       <br> 
+       Figure 5.b: Combination of the same images, shifted to
+       compensate for the motion of Comet Helin-Alu, which is visible
+       just in the center of this image.
+       </FONT> </I>
+  </tr>
+</table>
+
+<!---=====================================================--->
+<!---  End                                                --->
+<!---=====================================================--->
+
+<hr>
+<a href="CCD_artifacts.html">
+Next section: CCD artifacts
+</a>
+
+
+
+<hr> <FONT SIZE="2"> 
+
+Note: these images come from actual data I collected at the <a
+href="http://www.eso.org">European Southern Observatory</a> at <a
+href="http://www.ls.eso.org">La Silla</a>, Chile, with the New
+Technology Telescope (3.55m diam.), equipped with the SuSI camera, and
+at the <a href="http://www.ifa.hawaii.edu/mko/">Mauna Kea
+Observatory</a>, Hawaii (at the <a
+href="http://www.ifa.hawaii.edu/88inch/">88 inch (2.2m) UH
+telescope</a> and at the <a
+href="http://www.cfht.hawaii.edu/">Canada-France-Hawaii</a> 3.6m
+telescope), with the U.H Tektronics 2048 and U.H. 8k CCD
+mosaic.</font>
+
+<hr>
+|
+<a href="http://www.sc.eso.org/~ohainaut/Hale_Bopp/hb_ufo.html">
+Hale-Bopp's companions page</a>
+|
+<a href="http://www.sc.eso.org/~ohainaut/Hale_Bopp/hb_ufo_list.html">
+Hale-Bopp's companions list</a>
+| 
+<a href="http://www.ifa.hawaii.edu/images/hale-bopp">IfA Hale-Bopp
+page</a>
+|<br>|
+<a href="http://www.ifa.hawaii.edu/">IfA home page</a>
+|
+<a href="http://www.sc.eso.org/~ohainaut">O.H.'s page</a>
+|
+<A HREF="mailto:ohainaut@eso.org">Comments?</a>
+|
+
+<p><a href="http://www.sc.eso.org~ohainaut">Olivier Hainaut</a>
+
+<p> Tue Dec 10 19:09:33 1996
+<!----img src="http://www.ifa.hawaii.edu/cgi-bin/hainaut.cgi-bin/Count.cgi?df=hainaut.ccd.proc&sh=0"--->
+
+</BODY>
+
