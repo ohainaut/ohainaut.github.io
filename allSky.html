@@ -1,0 +1,553 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ESO Image Retriever</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --panel-2: #1f2937;
+      --accent: #f59e0b;
+      --accent-2: #fbbf24;
+      --text: #f3f4f6;
+      --muted: #9ca3af;
+      --ok: #22c55e;
+      --err: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 15%, #1e293b 0%, transparent 45%),
+        radial-gradient(circle at 85% 80%, #374151 0%, transparent 40%),
+        linear-gradient(145deg, #020617 0%, #0b1120 45%, #111827 100%);
+      min-height: 100vh;
+      padding: 0.55rem;
+    }
+
+    .app {
+      width: 100%;
+      display: grid;
+      gap: 0.55rem;
+    }
+
+    .config-panel {
+      width: 100%;
+      padding: 0.7rem;
+    }
+
+    .panel {
+      background: color-mix(in srgb, var(--panel) 88%, black 12%);
+      border: 1px solid color-mix(in srgb, var(--muted) 30%, transparent 70%);
+      border-radius: 16px;
+      padding: 1rem;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 12px 24px rgb(0 0 0 / 0.35);
+    }
+
+    .controls {
+      display: flex;
+      gap: 0.55rem;
+      align-items: flex-end;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      padding-bottom: 0.2rem;
+    }
+
+    label {
+      display: grid;
+      gap: 0.35rem;
+      font-size: 0.92rem;
+      color: var(--muted);
+      min-width: 128px;
+    }
+
+    input {
+      width: 100%;
+      background: var(--panel-2);
+      border: 1px solid #374151;
+      border-radius: 10px;
+      color: var(--text);
+      padding: 0.55rem 0.65rem;
+      font-size: 0.95rem;
+    }
+
+    select {
+      width: 100%;
+      background: var(--panel-2);
+      border: 1px solid #374151;
+      border-radius: 10px;
+      color: var(--text);
+      padding: 0.55rem 0.65rem;
+      font-size: 0.95rem;
+    }
+
+    button {
+      border: 1px solid color-mix(in srgb, var(--accent) 75%, #000 25%);
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: #1f2937;
+      font-weight: 700;
+      border-radius: 10px;
+      padding: 0.55rem 0.8rem;
+      cursor: pointer;
+      transition: transform 120ms ease, filter 120ms ease;
+      white-space: nowrap;
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      filter: grayscale(35%);
+      opacity: 0.6;
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: nowrap;
+      align-items: center;
+    }
+
+    .status {
+      margin-top: 0.8rem;
+      min-height: 1.2rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .status.ok {
+      color: var(--ok);
+    }
+
+    .status.err {
+      color: var(--err);
+    }
+
+    .viewer {
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .image-wrap {
+      min-height: 78vh;
+      background: #020617;
+      border: 1px solid #334155;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+    }
+
+    .image-wrap img {
+      width: 100%;
+      height: auto;
+      max-height: 82vh;
+      object-fit: contain;
+      display: block;
+      background: #020617;
+    }
+
+    .placeholder {
+      color: var(--muted);
+      padding: 1rem;
+      text-align: center;
+    }
+
+    .meta {
+      color: var(--muted);
+      font-size: 0.93rem;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="panel config-panel">
+      <div class="controls">
+        <label for="startDate">startDate (YYYY-MM-DD)
+          <input id="startDate" type="text" value="2026-02-13" placeholder="YYYY-MM-DD" inputmode="numeric">
+        </label>
+
+        <label for="endDate">endDate (YYYY-MM-DD)
+          <input id="endDate" type="text" value="2026-02-23" placeholder="YYYY-MM-DD" inputmode="numeric">
+        </label>
+
+        <label for="startHour">startHour
+          <input id="startHour" type="number" value="11" min="0" max="23" step="1">
+        </label>
+
+        <label for="endHour">endHour
+          <input id="endHour" type="number" value="11" min="0" max="23" step="1">
+        </label>
+
+        <label for="loopSpeedMs">loopSpeedMs
+          <input id="loopSpeedMs" type="number" value="1200" min="100" max="60000" step="100">
+        </label>
+
+        <label for="speedPreset">loopPreset
+          <select id="speedPreset">
+            <option value="custom" selected>custom</option>
+            <option value="fast">fast (100ms)</option>
+            <option value="normal">normal (500ms)</option>
+            <option value="slow">slow (2000ms)</option>
+          </select>
+        </label>
+
+        <label for="projectionMode">projection
+          <select id="projectionMode">
+            <option value="rectangle" selected>rectangle</option>
+            <option value="polar">polar</option>
+          </select>
+        </label>
+
+        <div class="actions">
+          <button id="retrieveBtn">retrieve images</button>
+          <button id="prevBtn" disabled>previous</button>
+          <button id="nextBtn" disabled>next</button>
+          <button id="loopBtn" disabled>loop: off</button>
+          <div id="counter" class="meta">0 / 0</div>
+        </div>
+      </div>
+
+      <p id="status" class="status">Set ranges then click retrieve images.</p>
+    </section>
+
+    <section class="panel viewer">
+      <div class="image-wrap" id="imageWrap">
+        <div class="placeholder">No image loaded yet.</div>
+      </div>
+
+      <div id="currentUrl" class="meta"></div>
+    </section>
+  </main>
+
+  <script>
+    const ROOT = "https://www.eso.org/public/archives/static/pano/";
+    const RECTANGLE_SUFFIX = "/POI/preset_100.jpg";
+    const POLAR_SUFFIX = "/POI/preset_99.jpg";
+    const MINUTE_CANDIDATES = ["40", "10", "00"];
+    const PRESET_SPEEDS = {
+      fast: 100,
+      normal: 500,
+      slow: 2000
+    };
+
+    const state = {
+      urls: [],
+      currentIndex: 0,
+      isLooping: false,
+      timerId: null,
+      isRetrieving: false
+    };
+
+    const el = {
+      startDate: document.getElementById("startDate"),
+      endDate: document.getElementById("endDate"),
+      startHour: document.getElementById("startHour"),
+      endHour: document.getElementById("endHour"),
+      loopSpeedMs: document.getElementById("loopSpeedMs"),
+      speedPreset: document.getElementById("speedPreset"),
+      projectionMode: document.getElementById("projectionMode"),
+      retrieveBtn: document.getElementById("retrieveBtn"),
+      status: document.getElementById("status"),
+      imageWrap: document.getElementById("imageWrap"),
+      currentUrl: document.getElementById("currentUrl"),
+      counter: document.getElementById("counter"),
+      prevBtn: document.getElementById("prevBtn"),
+      nextBtn: document.getElementById("nextBtn"),
+      loopBtn: document.getElementById("loopBtn")
+    };
+
+    function setStatus(text, level = "") {
+      el.status.textContent = text;
+      el.status.className = level ? `status ${level}` : "status";
+    }
+
+    function parseDateOnly(dateStr) {
+      const [y, m, d] = dateStr.split("-").map(Number);
+      return new Date(y, m - 1, d);
+    }
+
+    function isIsoDate(dateStr) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return false;
+      const parsed = parseDateOnly(dateStr);
+      return formatDate(parsed) === dateStr;
+    }
+
+    function formatDate(date) {
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, "0");
+      const d = String(date.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
+    }
+
+    function addDays(date, days) {
+      const next = new Date(date);
+      next.setDate(next.getDate() + days);
+      return next;
+    }
+
+    function pad2(n) {
+      return String(n).padStart(2, "0");
+    }
+
+    function clearLoop() {
+      if (state.timerId) {
+        clearInterval(state.timerId);
+        state.timerId = null;
+      }
+      state.isLooping = false;
+      el.loopBtn.textContent = "loop: off";
+    }
+
+    function getLoopSpeedMs() {
+      const value = Number(el.loopSpeedMs.value);
+      if (!Number.isFinite(value)) return 1200;
+      return Math.min(60000, Math.max(100, Math.round(value)));
+    }
+
+    function getSelectedSuffix() {
+      return el.projectionMode.value === "polar" ? POLAR_SUFFIX : RECTANGLE_SUFFIX;
+    }
+
+    function rewriteUrlSuffix(url, suffix) {
+      return url.replace(/\/POI\/preset_(99|100)\.jpg$/, suffix);
+    }
+
+    function renderImage() {
+      const hasImages = state.urls.length > 0;
+      el.prevBtn.disabled = !hasImages;
+      el.nextBtn.disabled = !hasImages;
+      el.loopBtn.disabled = !hasImages;
+
+      if (!hasImages) {
+        el.counter.textContent = "0 / 0";
+        el.currentUrl.textContent = "";
+        el.imageWrap.innerHTML = '<div class="placeholder">No valid images found for this range.</div>';
+        return;
+      }
+
+      const url = state.urls[state.currentIndex];
+      el.counter.textContent = `${state.currentIndex + 1} / ${state.urls.length}`;
+      el.currentUrl.textContent = url;
+
+      const img = document.createElement("img");
+      img.src = url;
+      img.alt = `ESO panorama ${state.currentIndex + 1}`;
+      el.imageWrap.innerHTML = "";
+      el.imageWrap.appendChild(img);
+    }
+
+    function showNextImage() {
+      if (!state.urls.length) return;
+      state.currentIndex = (state.currentIndex + 1) % state.urls.length;
+      renderImage();
+    }
+
+    function showPreviousImage() {
+      if (!state.urls.length) return;
+      state.currentIndex = (state.currentIndex - 1 + state.urls.length) % state.urls.length;
+      renderImage();
+    }
+
+    function toggleLoop() {
+      if (!state.urls.length) return;
+
+      if (state.isLooping) {
+        clearLoop();
+        return;
+      }
+
+      state.isLooping = true;
+      el.loopBtn.textContent = "loop: on";
+      state.timerId = setInterval(showNextImage, getLoopSpeedMs());
+    }
+
+    function validateRanges(startDate, endDate, startHour, endHour) {
+      if (!startDate || !endDate) {
+        return "Please select both startDate and endDate.";
+      }
+      if (!isIsoDate(startDate) || !isIsoDate(endDate)) {
+        return "Dates must use YYYY-MM-DD format.";
+      }
+      if (startDate > endDate) {
+        return "startDate must be before or equal to endDate.";
+      }
+      if (!Number.isInteger(startHour) || !Number.isInteger(endHour)) {
+        return "startHour and endHour must be integers.";
+      }
+      if (startHour < 0 || startHour > 23 || endHour < 0 || endHour > 23) {
+        return "Hours must be between 0 and 23.";
+      }
+      if (startHour > endHour) {
+        return "startHour must be before or equal to endHour.";
+      }
+      return "";
+    }
+
+    function imageLoads(url, timeoutMs = 5000) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        let done = false;
+
+        const finish = (result) => {
+          if (done) return;
+          done = true;
+          clearTimeout(timer);
+          resolve(result);
+        };
+
+        img.onload = () => finish(true);
+        img.onerror = () => finish(false);
+
+        const timer = setTimeout(() => finish(false), timeoutMs);
+        img.src = url;
+      });
+    }
+
+    async function findValidUrlForDateHour(dateText, hourText) {
+      const suffix = getSelectedSuffix();
+      for (const mm of MINUTE_CANDIDATES) {
+        const url = `${ROOT}${dateText}-${hourText}-${mm}${suffix}`;
+        // Only one minute value is expected to be valid, so stop at first success.
+        if (await imageLoads(url)) {
+          return url;
+        }
+      }
+      return "";
+    }
+
+    async function mapWithConcurrency(items, limit, mapper) {
+      const results = new Array(items.length);
+      let index = 0;
+
+      async function worker() {
+        while (true) {
+          const myIndex = index;
+          index += 1;
+          if (myIndex >= items.length) return;
+          results[myIndex] = await mapper(items[myIndex], myIndex);
+        }
+      }
+
+      const workerCount = Math.min(limit, items.length || 1);
+      await Promise.all(Array.from({ length: workerCount }, () => worker()));
+      return results;
+    }
+
+    async function retrieveImages() {
+      if (state.isRetrieving) return;
+
+      clearLoop();
+      state.urls = [];
+      state.currentIndex = 0;
+      renderImage();
+
+      const startDate = el.startDate.value;
+      const endDate = el.endDate.value;
+      const startHour = Number(el.startHour.value);
+      const endHour = Number(el.endHour.value);
+
+      const validationError = validateRanges(startDate, endDate, startHour, endHour);
+      if (validationError) {
+        setStatus(validationError, "err");
+        return;
+      }
+
+      state.isRetrieving = true;
+      el.retrieveBtn.disabled = true;
+      setStatus("Retrieving images...", "");
+
+      try {
+        const dateHourPairs = [];
+        const dStart = parseDateOnly(startDate);
+        const dEnd = parseDateOnly(endDate);
+
+        let current = dStart;
+
+        while (current <= dEnd) {
+          const dateText = formatDate(current);
+          for (let h = startHour; h <= endHour; h += 1) {
+            dateHourPairs.push({ dateText, hourText: pad2(h) });
+          }
+          current = addDays(current, 1);
+        }
+
+        let completed = 0;
+        const total = dateHourPairs.length;
+        const CONCURRENCY = 6;
+        const results = await mapWithConcurrency(dateHourPairs, CONCURRENCY, async (pair) => {
+          const validUrl = await findValidUrlForDateHour(pair.dateText, pair.hourText);
+          completed += 1;
+          setStatus(`Checking ${completed} / ${total} date-hour slot(s)...`);
+          return validUrl;
+        });
+
+        const urls = results.filter(Boolean);
+
+        state.urls = urls;
+        state.currentIndex = 0;
+
+        if (urls.length) {
+          setStatus(`Found ${urls.length} valid image(s).`, "ok");
+        } else {
+          setStatus("No valid image found in that range.", "err");
+        }
+
+        renderImage();
+      } catch (err) {
+        setStatus(`Error while retrieving images: ${err.message || err}`, "err");
+      } finally {
+        state.isRetrieving = false;
+        el.retrieveBtn.disabled = false;
+      }
+    }
+
+    el.retrieveBtn.addEventListener("click", retrieveImages);
+    el.prevBtn.addEventListener("click", showPreviousImage);
+    el.nextBtn.addEventListener("click", showNextImage);
+    el.loopBtn.addEventListener("click", toggleLoop);
+    el.speedPreset.addEventListener("change", () => {
+      const preset = el.speedPreset.value;
+      if (preset === "custom") return;
+      const speed = PRESET_SPEEDS[preset];
+      el.loopSpeedMs.value = String(speed);
+      if (state.isLooping) {
+        clearInterval(state.timerId);
+        state.timerId = setInterval(showNextImage, speed);
+      }
+    });
+    el.loopSpeedMs.addEventListener("change", () => {
+      const clamped = getLoopSpeedMs();
+      el.loopSpeedMs.value = String(clamped);
+      const matchingPreset = Object.entries(PRESET_SPEEDS).find(([, value]) => value === clamped);
+      el.speedPreset.value = matchingPreset ? matchingPreset[0] : "custom";
+      if (state.isLooping) {
+        clearInterval(state.timerId);
+        state.timerId = setInterval(showNextImage, clamped);
+      }
+    });
+    el.projectionMode.addEventListener("change", () => {
+      if (!state.urls.length) return;
+      const suffix = getSelectedSuffix();
+      state.urls = state.urls.map((url) => rewriteUrlSuffix(url, suffix));
+      renderImage();
+      setStatus(`Projection changed to ${el.projectionMode.value}; updated existing URLs.`, "ok");
+    });
+
+    renderImage();
+  </script>
+</body>
+</html>
